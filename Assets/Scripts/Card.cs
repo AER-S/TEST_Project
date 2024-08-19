@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class Card : MonoBehaviour
 {
     [SerializeField] private Image frontImage;
+    
+    public int Index { get; set; }
 
     private CardSlot _slot;
 

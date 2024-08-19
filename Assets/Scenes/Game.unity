@@ -336,9 +336,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 7605383790552541194, guid: d610695d861680546ad7e669cd23b03d, type: 3}
+  cardSlotPrefab: {fileID: 4037966734762489906, guid: 703a1d27c028d8f43bee0e0417aea619, type: 3}
   grid: {fileID: 1818462056}
-  rows: 4
-  columns: 4
+  rows: 3
+  columns: 3
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

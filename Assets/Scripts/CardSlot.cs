@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class CardSlot : MonoBehaviour
 {
-    public int Index { get; set; }
-
     public void PopulateWith(Card newCard)
     {
         newCard.transform.SetParent(transform);
