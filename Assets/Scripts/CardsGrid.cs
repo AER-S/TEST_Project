@@ -1,11 +1,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector2 = UnityEngine.Vector2;
 
-public class CardsGrid : MonoBehaviour
+public class CardsGrid : Singleton<CardsGrid>
 {
     [SerializeField] private Card cardPrefab;
     [SerializeField] private CardSlot cardSlotPrefab;
@@ -15,13 +16,8 @@ public class CardsGrid : MonoBehaviour
 
     private CardSlot[] _cardSlots;
 
-    private void Start()
-    {
-        Canvas.ForceUpdateCanvases();
-        PopulateGrid();
-    }
-
-    private void PopulateGrid()
+    
+    public void PopulateNewGrid()
     {
         CalculateCellSize();
         PopulateWithCardSlots();
