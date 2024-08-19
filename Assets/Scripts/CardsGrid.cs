@@ -24,6 +24,12 @@ public class CardsGrid : Singleton<CardsGrid>
         PopulateSlotsWith(GenerateCards());
         
     }
+    
+    private struct SpriteData
+    {
+        public Sprite Sprite;
+        public int Value;
+    }
 
     private void CalculateCellSize()
     {
@@ -54,7 +60,9 @@ public class CardsGrid : Singleton<CardsGrid>
         {
             if(slotsCount%2 != 0 && i==slotsCount/2) ++i;
             var newCard = Instantiate<Card>(cardPrefab);
-            newCard.SetImage(GetSpriteFrom(cardsSprites));
+            var spriteData = GetSpriteFrom(cardsSprites);
+            newCard.SetImage(spriteData.Sprite);
+            newCard.Value = spriteData.Value;
             newCard.Index = i;
             _cards.Add(newCard);
         }
@@ -62,7 +70,7 @@ public class CardsGrid : Singleton<CardsGrid>
         return _cards;
     }
 
-    private Sprite GetSpriteFrom(Dictionary<Sprite, int> sprites)
+    private SpriteData GetSpriteFrom(Dictionary<SpriteData, int> sprites)
     {
         var randomIndex = Random.Range(0, sprites.Count);
         var sprite = sprites.ElementAt(randomIndex);
@@ -79,14 +87,15 @@ public class CardsGrid : Singleton<CardsGrid>
         }
     }
 
-    private Dictionary<Sprite, int> GenerateSprites(int cardsCount)
+    private Dictionary<SpriteData, int> GenerateSprites(int cardsCount)
     {
         Sprite[] sprites = Resources.LoadAll<Sprite>("sheet_white2x");
         var spritesCount = cardsCount / 2;
-        var cardsSprites = new Dictionary<Sprite, int>();
+        var cardsSprites = new Dictionary<SpriteData, int>();
         for (int i = 0; i < spritesCount; i++)
         {
-            cardsSprites.Add(sprites[i],2);
+            var newSpriteData = new SpriteData(){Sprite = sprites[i], Value = i};
+            cardsSprites.Add(newSpriteData,2);
         }
 
         return cardsSprites;

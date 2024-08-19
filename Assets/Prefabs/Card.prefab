@@ -200,7 +200,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7605383790552541194}
         m_TargetAssemblyTypeName: Card, Assembly-CSharp
-        m_MethodName: Flip
+        m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
