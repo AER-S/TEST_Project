@@ -6,6 +6,9 @@ public class Card : MonoBehaviour
 {
     [SerializeField] private Image frontImage;
 
+    private CardSlot _slot;
+
+    public void SetSlot(CardSlot slot) => _slot = slot;
     public void SetImage(Sprite newImage)
     {
         frontImage.sprite = newImage;
