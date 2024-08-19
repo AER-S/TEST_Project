@@ -15,14 +15,43 @@ public class CardsGrid : Singleton<CardsGrid>
     [SerializeField] private int columns = 2;
 
     private CardSlot[] _cardSlots;
+    private List<Card> _cards;
 
-    
+
     public void PopulateNewGrid()
     {
         CalculateCellSize();
         PopulateWithCardSlots();
-        PopulateSlotsWith(GenerateCards());
+        _cards = GenerateCards();
+        PopulateSlotsWith(_cards);
         
+    }
+
+    public void DestroyCard(Card card)
+    {
+        _cards.Remove(card);
+        Destroy(card.gameObject);
+    }
+
+    public void FlipAllCards()
+    {
+        foreach (var card in _cards)
+        {
+            card.Flip();
+        }
+    }
+
+    public void UnFlipAllCards()
+    {
+        foreach (var card in _cards)
+        {
+            card.UnFlip();
+        }
+    }
+
+    public void SetInteractable(bool value)
+    {
+        GetComponent<CanvasGroup>().interactable = value;
     }
     
     private struct SpriteData
