@@ -1,11 +1,13 @@
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Common;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+    [SerializeField] private float comparisonTime = 1;
     private List<Card> _cardsPair;
 
     private Queue<List<Card>> _comparisonTargets;
@@ -23,16 +25,22 @@ public class GameManager : Singleton<GameManager>
         while (_comparisonTargets.Count>0)
         {
             var comparisonTarget = _comparisonTargets.Dequeue();
-            if (comparisonTarget[0].Value == comparisonTarget[1].Value)
-            {
-                Destroy(comparisonTarget[0].gameObject);
-                Destroy(comparisonTarget[1].gameObject);
-            }
-            else
-            {
-                comparisonTarget[0].UnFlip();
-                comparisonTarget[1].UnFlip();
-            }
+            StartCoroutine(nameof(CompareCards), comparisonTarget);
+        }
+    }
+
+    private IEnumerator CompareCards(List<Card> pairOfCards)
+    {
+        yield return new WaitForSecondsRealtime(comparisonTime);
+        if (pairOfCards[0].Value == pairOfCards[1].Value)
+        {
+            Destroy(pairOfCards[0].gameObject);
+            Destroy(pairOfCards[1].gameObject);
+        }
+        else
+        {
+            pairOfCards[0].UnFlip();
+            pairOfCards[1].UnFlip();
         }
     }
 
