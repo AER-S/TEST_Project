@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Vector2 = UnityEngine.Vector2;
@@ -52,17 +53,26 @@ public class CardsGrid : MonoBehaviour
     {
         List<Card> _cards = new List<Card>();
         var slotsCount = _cardSlots.Length;
-        Sprite[] sprites = Resources.LoadAll<Sprite>("sheet_white2x");
+        var cardsSprites = GenerateSprites(slotsCount);
         for (int i = 0; i < slotsCount; i++)
         {
             if(slotsCount%2 != 0 && i==slotsCount/2) ++i;
             var newCard = Instantiate<Card>(cardPrefab);
-            newCard.SetImage(sprites[i]);
+            newCard.SetImage(GetSpriteFrom(cardsSprites));
             newCard.Index = i;
             _cards.Add(newCard);
         }
 
         return _cards;
+    }
+
+    private Sprite GetSpriteFrom(Dictionary<Sprite, int> sprites)
+    {
+        var randomIndex = Random.Range(0, sprites.Count);
+        var sprite = sprites.ElementAt(randomIndex);
+        if (sprite.Value == 1) sprites.Remove(sprite.Key);
+        else sprites[sprite.Key] = 1;
+        return sprite.Key;
     }
 
     private void PopulateSlotsWith(List<Card> cards)
@@ -71,5 +81,18 @@ public class CardsGrid : MonoBehaviour
         {
             _cardSlots[card.Index].PopulateWith(card);
         }
+    }
+
+    private Dictionary<Sprite, int> GenerateSprites(int cardsCount)
+    {
+        Sprite[] sprites = Resources.LoadAll<Sprite>("sheet_white2x");
+        var spritesCount = cardsCount / 2;
+        var cardsSprites = new Dictionary<Sprite, int>();
+        for (int i = 0; i < spritesCount; i++)
+        {
+            cardsSprites.Add(sprites[i],2);
+        }
+
+        return cardsSprites;
     }
 }
