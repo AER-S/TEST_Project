@@ -10,6 +10,8 @@ public class CardsGrid : MonoBehaviour
     [SerializeField] private int rows = 2;
     [SerializeField] private int columns = 2;
 
+    
+
     private void Start()
     {
         Canvas.ForceUpdateCanvases();
@@ -20,10 +22,11 @@ public class CardsGrid : MonoBehaviour
     {
         CalculateCellSize();
         var cardsCount = rows * columns;
+        Sprite[] sprites = Resources.LoadAll<Sprite>("sheet_white2x");
         for (int i = 0; i < cardsCount; i++)
         {
-            var newCard = Instantiate(cardPrefab,grid.transform);
-            
+            var newCard = Instantiate<Card>(cardPrefab,grid.transform);
+            newCard.SetImage(sprites[i]);
         }
     }
 
