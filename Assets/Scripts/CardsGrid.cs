@@ -1,9 +1,11 @@
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Common;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 
 public class CardsGrid : Singleton<CardsGrid>
@@ -13,6 +15,8 @@ public class CardsGrid : Singleton<CardsGrid>
     [SerializeField] private GridLayoutGroup grid;
     [SerializeField] private int rows = 2;
     [SerializeField] private int columns = 2;
+
+    public static Action AllCardsDestroyed;
 
     private CardSlot[] _cardSlots;
     private List<Card> _cards;
@@ -31,6 +35,7 @@ public class CardsGrid : Singleton<CardsGrid>
     {
         _cards.Remove(card);
         Destroy(card.gameObject);
+        if(_cards.Count<=0) AllCardsDestroyed?.Invoke();
     }
 
     public void FlipAllCards()

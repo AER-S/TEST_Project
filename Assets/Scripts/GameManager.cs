@@ -10,9 +10,25 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private float comparisonTime = 1;
     [SerializeField] private float showingCardsTime = 3;
+    
     private List<Card> _cardsPair;
 
     private Queue<List<Card>> _comparisonTargets;
+
+    private void OnEnable()
+    {
+        CardsGrid.AllCardsDestroyed += OnAllCardsDestroyed;
+    }
+
+    private void OnDisable()
+    {
+        CardsGrid.AllCardsDestroyed -= OnAllCardsDestroyed;
+    }
+
+    private void OnAllCardsDestroyed()
+    {
+        Debug.Log("Game Over");
+    }
 
     private void Start()
     {
