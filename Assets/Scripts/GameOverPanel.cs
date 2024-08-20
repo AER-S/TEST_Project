@@ -7,6 +7,7 @@ public class GameOverPanel : MonoBehaviour
     public void Restart()
     {
         PanelsManager.Instance.ShowGamePanel();
+        GameManager.Instance.NewGame();
         GameManager.Instance.Start();
     }
 

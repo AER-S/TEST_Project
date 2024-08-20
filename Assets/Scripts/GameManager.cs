@@ -11,7 +11,9 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private float comparisonTime = 1;
     [SerializeField] private float showingCardsTime = 3;
-    
+
+    public static Action<bool> DoneComparing;
+
     public bool IsSavedGame { get; private set; }
     private List<Card> _cardsPair;
 
@@ -42,12 +44,18 @@ public class GameManager : Singleton<GameManager>
     {
         PanelsManager.Instance.ShowGameOverPanel();
     }
+    
+    public void NewGame()
+    {
+        IsSavedGame = false;
+    }
 
     public void Start()
     {
         _cardsPair = new List<Card>();
         _comparisonTargets = new Queue<List<Card>>();
         Canvas.ForceUpdateCanvases();
+        ScoreSystem.Instance.Start();
         CardsGrid.Instance.Populate();
         StartCoroutine(StartGame());
     }
@@ -68,11 +76,13 @@ public class GameManager : Singleton<GameManager>
         {
             CardsGrid.Instance.DestroyCard(pairOfCards[0]);
             CardsGrid.Instance.DestroyCard(pairOfCards[1]);
+            DoneComparing.Invoke(true);
         }
         else
         {
             pairOfCards[0].UnFlip();
             pairOfCards[1].UnFlip();
+            DoneComparing.Invoke(false);
         }
     }
 
@@ -116,4 +126,6 @@ public class GameManager : Singleton<GameManager>
         GameData.LastGameCards = CardsGrid.Instance.Cards().Count > 0 ? CardsGrid.Instance.Cards() : new List<Card.CardData>();
         SaveSystem.Instance.SaveGame(GameData);
     }
+
+    
 }
