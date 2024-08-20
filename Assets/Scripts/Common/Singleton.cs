@@ -9,7 +9,7 @@ namespace Common
         public static T Instance => _instance;
         private static T _instance;
 
-        private void Awake()
+        protected void Awake()
         {
             if(_instance) Destroy(gameObject);
             else

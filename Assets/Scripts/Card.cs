@@ -4,10 +4,16 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    [SerializeField] private Image frontImage;
+    [System.Serializable]
+    public struct CardData
+    {
+        public int Index;
+        public int Value;
+    }
     
-    public int Index { get; set; }
-    public int Value { get; set; }
+    [SerializeField] private Image frontImage;
+
+    public CardData Data;
 
     private CardSlot _slot;
 

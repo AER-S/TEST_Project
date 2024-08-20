@@ -17,10 +17,55 @@ public class CardsGrid : Common.Singleton<CardsGrid>
     [SerializeField] private int columns = 2;
 
     public static Action AllCardsDestroyed;
+    public int Rows => rows;
+    public void SetRows(int value) => rows = value;
+    public int Columns => columns;
+    public void SetColumns(int value) => columns = value;
+
+    public List<Card.CardData> Cards()
+    {
+        List<Card.CardData> cardsData = new List<Card.CardData>();
+        foreach (var card in _cards)
+        {
+            cardsData.Add(card.Data);
+        }
+
+        return cardsData;
+    }
+
+    public void SetCards(List<Card.CardData> cards)
+    {
+        _cards = new List<Card>();
+        Sprite[] sprites = Resources.LoadAll<Sprite>("sheet_white2x");
+        foreach (var cardData in cards)
+        {
+            var newCard = Instantiate(cardPrefab);
+            newCard.SetImage(sprites[cardData.Value]);
+            newCard.Data.Value = cardData.Value;
+            newCard.Data.Index = cardData.Index;
+            _cards.Add(newCard);
+        }
+    }
+    
 
     private CardSlot[] _cardSlots;
     private List<Card> _cards;
 
+    public void Populate()
+    {
+        if(GameManager.Instance.IsSavedGame) PopulateSavedGrid();
+        else PopulateNewGrid();
+    }
+
+    public void PopulateSavedGrid()
+    {
+        rows = GameManager.Instance.GameData.Rows;
+        columns = GameManager.Instance.GameData.Columns;
+        SetCards(GameManager.Instance.GameData.LastGameCards);
+        CalculateCellSize();
+        PopulateWithCardSlots();
+        PopulateSlotsWith(_cards);
+    }
 
     public void PopulateNewGrid()
     {
@@ -98,13 +143,14 @@ public class CardsGrid : Common.Singleton<CardsGrid>
             var newCard = Instantiate<Card>(cardPrefab);
             var spriteData = GetSpriteFrom(cardsSprites);
             newCard.SetImage(spriteData.Sprite);
-            newCard.Value = spriteData.Value;
-            newCard.Index = i;
+            newCard.Data.Value = spriteData.Value;
+            newCard.Data.Index = i;
             _cards.Add(newCard);
         }
 
         return _cards;
     }
+    
 
     private SpriteData GetSpriteFrom(Dictionary<SpriteData, int> sprites)
     {
@@ -119,7 +165,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
     {
         foreach (var card in cards)
         {
-            _cardSlots[card.Index].PopulateWith(card);
+            _cardSlots[card.Data.Index].PopulateWith(card);
         }
     }
 
