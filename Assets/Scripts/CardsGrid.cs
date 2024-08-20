@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 
-public class CardsGrid : Singleton<CardsGrid>
+public class CardsGrid : Common.Singleton<CardsGrid>
 {
     [SerializeField] private Card cardPrefab;
     [SerializeField] private CardSlot cardSlotPrefab;
@@ -24,6 +24,7 @@ public class CardsGrid : Singleton<CardsGrid>
 
     public void PopulateNewGrid()
     {
+        
         CalculateCellSize();
         PopulateWithCardSlots();
         _cards = GenerateCards();
@@ -77,6 +78,7 @@ public class CardsGrid : Singleton<CardsGrid>
 
     private void PopulateWithCardSlots()
     {
+        if(_cardSlots!= null && _cardSlots.Length>0) ClearSlots();
         var slotsCount = rows * columns;
         _cardSlots = new CardSlot[slotsCount];
         for (int i = 0; i < slotsCount; i++)
@@ -133,6 +135,16 @@ public class CardsGrid : Singleton<CardsGrid>
         }
 
         return cardsSprites;
+    }
+
+    private void ClearSlots()
+    {
+        foreach (var slot in _cardSlots)
+        {
+            Destroy(slot.gameObject);
+        }
+
+        _cardSlots = Array.Empty<CardSlot>();
     }
     
 }

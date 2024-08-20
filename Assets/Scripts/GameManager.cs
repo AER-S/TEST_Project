@@ -27,10 +27,10 @@ public class GameManager : Singleton<GameManager>
 
     private void OnAllCardsDestroyed()
     {
-        Debug.Log("Game Over");
+        PanelsManager.Instance.ShowGameOverPanel();
     }
 
-    private void Start()
+    public void Start()
     {
         _cardsPair = new List<Card>();
         _comparisonTargets = new Queue<List<Card>>();
