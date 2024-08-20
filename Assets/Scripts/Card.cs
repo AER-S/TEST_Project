@@ -48,4 +48,14 @@ public class Card : MonoBehaviour
         animation.Play("FlipBack");
         isFlipped = false;
     }
+
+    public void DestroyCard()
+    {
+        animation.Play("Destroy");
+    }
+
+    public void DestroyGameObject()
+    {
+        Destroy(gameObject);
+    }
 }

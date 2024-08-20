@@ -80,7 +80,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
     public void DestroyCard(Card card)
     {
         _cards.Remove(card);
-        Destroy(card.gameObject);
+        card.DestroyCard();
         if(_cards.Count<=0) AllCardsDestroyed?.Invoke();
     }
 
