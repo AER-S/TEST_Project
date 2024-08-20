@@ -1,6 +1,5 @@
 using System;
 using Common;
-using UnityEngine;
 
 public class ScoreSystem : Singleton<ScoreSystem>
 {

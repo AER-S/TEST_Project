@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Common;
 using UnityEngine;
 
@@ -8,6 +6,18 @@ public class PanelsManager : Singleton<PanelsManager>
     [SerializeField] private RectTransform mainMenuPanel;
     [SerializeField] private RectTransform gamePanel;
     [SerializeField] private RectTransform gameOverPanel;
+
+    private void OnEnable()
+    {
+        GameManager.GameEnded += ShowGameOverPanel;
+        GameManager.GameStarted += ShowGamePanel;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.GameEnded -= ShowGameOverPanel;
+        GameManager.GameStarted -= ShowGamePanel;
+    }
 
     private void HideAll()
     {
@@ -22,13 +32,13 @@ public class PanelsManager : Singleton<PanelsManager>
         mainMenuPanel.gameObject.SetActive(true);
     }
     
-    public void ShowGamePanel()
+    private void ShowGamePanel()
     {
         HideAll();
         gamePanel.gameObject.SetActive(true);
     }
 
-    public void ShowGameOverPanel()
+    private void ShowGameOverPanel()
     {
         HideAll();
         gameOverPanel.gameObject.SetActive(true);

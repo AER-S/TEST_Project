@@ -1,11 +1,9 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Common;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
 
 public class GameManager : Singleton<GameManager>
 {
@@ -14,13 +12,13 @@ public class GameManager : Singleton<GameManager>
 
     public static Action<bool> DoneComparing;
     public static Action GameEnded;
+    public static Action GameStarted;
 
     public bool IsSavedGame { get; private set; }
+    
     private List<Card> _cardsPair;
 
     private Queue<List<Card>> _comparisonTargets;
-
-    
     public SaveSystem.GameData GameData { get; private set; }
 
     new void Awake()
@@ -49,7 +47,6 @@ public class GameManager : Singleton<GameManager>
     private IEnumerator GameOver()
     {
         yield return new WaitForSecondsRealtime(2);
-        PanelsManager.Instance.ShowGameOverPanel();
         GameEnded?.Invoke();
     }
     
@@ -60,6 +57,7 @@ public class GameManager : Singleton<GameManager>
 
     public void Start()
     {
+        GameStarted?.Invoke();
         _cardsPair = new List<Card>();
         _comparisonTargets = new Queue<List<Card>>();
         Canvas.ForceUpdateCanvases();
@@ -96,11 +94,9 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator StartGame()
     {
-        CardsGrid.Instance.SetInteractable(false);
         CardsGrid.Instance.FlipAllCards();
         yield return new WaitForSecondsRealtime(showingCardsTime);
         CardsGrid.Instance.UnFlipAllCards();
-        CardsGrid.Instance.SetInteractable(true);
     }
 
     public void TakeCard(Card card)
@@ -115,15 +111,7 @@ public class GameManager : Singleton<GameManager>
 
     private void ProcessGameData()
     {
-        IsSavedGame = false;
-        if (GameData != null)
-        {
-            if (GameData.LastGameCards.Count > 0)
-            {
-                IsSavedGame = true;
-            }
-        }
-        
+        IsSavedGame = GameData != null && GameData.LastGameCards.Count > 0;
     }
 
     private void OnDestroy()
@@ -134,13 +122,13 @@ public class GameManager : Singleton<GameManager>
 
     private void CollectData()
     {
-        if (GameData == null) GameData = new SaveSystem.GameData();
+        GameData ??= new SaveSystem.GameData();
         GameData.Rows = CardsGrid.Instance.Rows;
         GameData.Columns = CardsGrid.Instance.Columns;
         GameData.Score = ScoreSystem.Instance.Score;
         GameData.Moves = ScoreSystem.Instance.Moves;
         GameData.Combo = ScoreSystem.Instance.Combo;
-        GameData.LastGameCards = CardsGrid.Instance.Cards().Count > 0 ? CardsGrid.Instance.Cards() : new List<Card.CardData>();
+        GameData.LastGameCards = CardsGrid.Instance.GetCardsData().Count > 0 ? CardsGrid.Instance.GetCardsData() : new List<Card.CardData>();
     }
 
     

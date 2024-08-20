@@ -1,8 +1,6 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -23,6 +21,8 @@ public class CardsGrid : Common.Singleton<CardsGrid>
     private ObjectPool<Card> _cardsPool;
 
     private ObjectPool<CardSlot> _slotsPool;
+    private CardSlot[] _cardSlots;
+    private List<Card> _cards;
 
     new void Awake()
     {
@@ -31,7 +31,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
         _slotsPool = new ObjectPool<CardSlot>(cardSlotPrefab, rows * columns);
     }
 
-    public List<Card.CardData> Cards()
+    public List<Card.CardData> GetCardsData()
     {
         List<Card.CardData> cardsData = new List<Card.CardData>();
         foreach (var card in _cards)
@@ -42,7 +42,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
         return cardsData;
     }
 
-    public void SetCards(List<Card.CardData> cards)
+    private void SetCards(List<Card.CardData> cards)
     {
         _cards = new List<Card>();
         Sprite[] sprites = Resources.LoadAll<Sprite>("sheet_white2x");
@@ -57,8 +57,6 @@ public class CardsGrid : Common.Singleton<CardsGrid>
     }
     
 
-    private CardSlot[] _cardSlots;
-    private List<Card> _cards;
 
     public void Populate()
     {
@@ -66,24 +64,25 @@ public class CardsGrid : Common.Singleton<CardsGrid>
         else PopulateNewGrid();
     }
 
-    public void PopulateSavedGrid()
+    private void PopulateGrid()
     {
-        rows = GameManager.Instance.GameData.Rows;
-        columns = GameManager.Instance.GameData.Columns;
-        SetCards(GameManager.Instance.GameData.LastGameCards);
         CalculateCellSize();
         PopulateWithCardSlots();
         PopulateSlotsWith(_cards);
     }
 
-    public void PopulateNewGrid()
+    private void PopulateSavedGrid()
     {
-        
-        CalculateCellSize();
-        PopulateWithCardSlots();
+        rows = GameManager.Instance.GameData.Rows;
+        columns = GameManager.Instance.GameData.Columns;
+        SetCards(GameManager.Instance.GameData.LastGameCards);
+        PopulateGrid();
+    }
+
+    private void PopulateNewGrid()
+    {
         _cards = GenerateCards();
-        PopulateSlotsWith(_cards);
-        
+        PopulateGrid();
     }
 
     public void DestroyCard(Card card)
@@ -110,11 +109,6 @@ public class CardsGrid : Common.Singleton<CardsGrid>
         }
     }
 
-    public void SetInteractable(bool value)
-    {
-        GetComponent<CanvasGroup>().interactable = value;
-    }
-    
     private struct SpriteData
     {
         public Sprite Sprite;
@@ -133,7 +127,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
 
     private void PopulateWithCardSlots()
     {
-        if(_cardSlots!= null && _cardSlots.Length>0) ClearSlots();
+        if(_cardSlots is { Length: > 0 }) ClearSlots();
         var slotsCount = rows * columns;
         _cardSlots = new CardSlot[slotsCount];
         for (int i = 0; i < slotsCount; i++)
@@ -145,7 +139,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
 
     private List<Card> GenerateCards()
     {
-        List<Card> _cards = new List<Card>();
+        List<Card> cards = new List<Card>();
         var slotsCount = _cardSlots.Length;
         var cardsSprites = GenerateSprites(slotsCount);
         for (int i = 0; i < slotsCount; i++)
@@ -156,10 +150,10 @@ public class CardsGrid : Common.Singleton<CardsGrid>
             newCard.SetImage(spriteData.Sprite);
             newCard.Data.Value = spriteData.Value;
             newCard.Data.Index = i;
-            _cards.Add(newCard);
+            cards.Add(newCard);
         }
 
-        return _cards;
+        return cards;
     }
     
 

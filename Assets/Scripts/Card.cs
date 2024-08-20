@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    [System.Serializable]
+    [Serializable]
     public struct CardData
     {
         public int Index;
@@ -19,13 +19,9 @@ public class Card : MonoBehaviour
 
     public CardData Data;
     
-
-    private bool isFlipped = false;
+    private bool _isFlipped;
     
-
     
-
-
     public void SetImage(Sprite newImage)
     {
         frontImage.sprite = newImage;
@@ -33,7 +29,7 @@ public class Card : MonoBehaviour
 
     public void OnClick()
     {
-        if (!isFlipped)
+        if (!_isFlipped)
         {
             Flip();
             GameManager.Instance.TakeCard(this);
@@ -42,14 +38,14 @@ public class Card : MonoBehaviour
     public void Flip()
     {
         animation.Play("Flip");
-        isFlipped = true;
+        _isFlipped = true;
         CardFlipped?.Invoke();
     }
 
     public void UnFlip()
     {
         animation.Play("FlipBack");
-        isFlipped = false;
+        _isFlipped = false;
         CardFlipped?.Invoke();
     }
 
