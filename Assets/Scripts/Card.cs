@@ -60,6 +60,7 @@ public class Card : MonoBehaviour
 
     public void DestroyGameObject()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        transform.localScale = Vector3.one;
     }
 }

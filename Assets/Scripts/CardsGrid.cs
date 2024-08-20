@@ -18,9 +18,18 @@ public class CardsGrid : Common.Singleton<CardsGrid>
 
     public static Action AllCardsDestroyed;
     public int Rows => rows;
-    public void SetRows(int value) => rows = value;
     public int Columns => columns;
-    public void SetColumns(int value) => columns = value;
+
+    private ObjectPool<Card> _cardsPool;
+
+    private ObjectPool<CardSlot> _slotsPool;
+
+    new void Awake()
+    {
+        base.Awake();
+        _cardsPool = new ObjectPool<Card>(cardPrefab, rows * columns);
+        _slotsPool = new ObjectPool<CardSlot>(cardSlotPrefab, rows * columns);
+    }
 
     public List<Card.CardData> Cards()
     {
@@ -39,7 +48,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
         Sprite[] sprites = Resources.LoadAll<Sprite>("sheet_white2x");
         foreach (var cardData in cards)
         {
-            var newCard = Instantiate(cardPrefab);
+            var newCard = _cardsPool.Get();
             newCard.SetImage(sprites[cardData.Value]);
             newCard.Data.Value = cardData.Value;
             newCard.Data.Index = cardData.Index;
@@ -81,6 +90,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
     {
         _cards.Remove(card);
         card.DestroyCard();
+        _cardsPool.ReturnToPool(card,true);
         if(_cards.Count<=0) AllCardsDestroyed?.Invoke();
     }
 
@@ -128,7 +138,8 @@ public class CardsGrid : Common.Singleton<CardsGrid>
         _cardSlots = new CardSlot[slotsCount];
         for (int i = 0; i < slotsCount; i++)
         {
-            _cardSlots[i] = Instantiate(cardSlotPrefab, grid.transform);
+            _cardSlots[i] = _slotsPool.Get();
+            _cardSlots[i].transform.SetParent(grid.transform);
         }
     }
 
@@ -140,7 +151,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
         for (int i = 0; i < slotsCount; i++)
         {
             if(slotsCount%2 != 0 && i==slotsCount/2) ++i;
-            var newCard = Instantiate<Card>(cardPrefab);
+            var newCard = _cardsPool.Get();
             var spriteData = GetSpriteFrom(cardsSprites);
             newCard.SetImage(spriteData.Sprite);
             newCard.Data.Value = spriteData.Value;
@@ -187,7 +198,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
     {
         foreach (var slot in _cardSlots)
         {
-            Destroy(slot.gameObject);
+            _slotsPool.ReturnToPool(slot);
         }
 
         _cardSlots = Array.Empty<CardSlot>();
