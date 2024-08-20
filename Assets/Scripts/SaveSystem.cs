@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Common;
 using UnityEngine;
 
-public class SaveSystem : Singleton<SaveSystem>
+public static class SaveSystem //: Singleton<SaveSystem>
 {
     [System.Serializable]
     public class GameData
@@ -17,15 +17,16 @@ public class SaveSystem : Singleton<SaveSystem>
         public int Combo;
     }
 
-    private string _savePath;
+    private static string _savePath;
 
-    new void Awake()
+
+    static SaveSystem()
     {
-        base.Awake();
         _savePath = Path.Combine(Application.persistentDataPath, "saveData.dat");
+        
     }
 
-    public void SaveGame(GameData gameData)
+    public static void SaveGame(GameData gameData)
     {
         BinaryFormatter formatter = new BinaryFormatter();
         using (FileStream stream = new FileStream(_savePath, FileMode.Create))
@@ -34,7 +35,7 @@ public class SaveSystem : Singleton<SaveSystem>
         }
     }
     
-    public GameData LoadGame()
+    public static GameData LoadGame()
     {
         if (File.Exists(_savePath))
         {

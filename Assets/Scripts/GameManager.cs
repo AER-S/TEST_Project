@@ -26,12 +26,13 @@ public class GameManager : Singleton<GameManager>
     new void Awake()
     {
         base.Awake();
-        GameData = SaveSystem.Instance.LoadGame();
-        
+        GameData = SaveSystem.LoadGame();
+
     }
 
     private void OnEnable()
     {
+        
         CardsGrid.AllCardsDestroyed += OnAllCardsDestroyed;
         ProcessGameData();
     }
@@ -133,7 +134,7 @@ public class GameManager : Singleton<GameManager>
     private void OnDestroy()
     {
         CollectData();
-        SaveSystem.Instance.SaveGame(GameData);
+        SaveSystem.SaveGame(GameData);
     }
 
     private void CollectData()
