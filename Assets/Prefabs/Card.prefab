@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 7605383790552541196}
   - component: {fileID: 7605383790552541197}
   - component: {fileID: 7605383790552541194}
+  - component: {fileID: 5854183214550522188}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -223,6 +224,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   frontImage: {fileID: 7605383790296329288}
+  animation: {fileID: 5854183214550522188}
+  Data:
+    Index: 0
+    Value: 0
+--- !u!111 &5854183214550522188
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7605383790552541199}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 03fce7c2ef8a82044912c221e34bc9ec, type: 2}
+  - {fileID: 7400000, guid: 10c1a6b5548c92e4cbf1bda9d4b4bace, type: 2}
+  - {fileID: 7400000, guid: 0d4bbc87d6cc8914a8b07a26892c73aa, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &7605383790857261215
 GameObject:
   m_ObjectHideFlags: 0

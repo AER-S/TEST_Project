@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,16 +13,17 @@ public class Card : MonoBehaviour
     }
     
     [SerializeField] private Image frontImage;
+    [SerializeField] private Animation animation;
 
     public CardData Data;
-
-    private CardSlot _slot;
+    
 
     private bool isFlipped = false;
+    
 
-    public void SetSlot(CardSlot slot) => _slot = slot;
     
-    
+
+
     public void SetImage(Sprite newImage)
     {
         frontImage.sprite = newImage;
@@ -37,13 +39,13 @@ public class Card : MonoBehaviour
     }
     public void Flip()
     {
-        transform.eulerAngles = new Vector3(0, 180, 0);
+        animation.Play("Flip");
         isFlipped = true;
     }
 
     public void UnFlip()
     {
-        transform.eulerAngles = Vector3.zero;
+        animation.Play("FlipBack");
         isFlipped = false;
     }
 }
