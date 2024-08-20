@@ -14,12 +14,14 @@ public class GameManager : Singleton<GameManager>
     public static Action GameEnded;
     public static Action GameStarted;
 
+    public SaveSystem.GameData GameData { get; private set; }
     public bool IsSavedGame { get; private set; }
     
     private List<Card> _cardsPair;
 
     private Queue<List<Card>> _comparisonTargets;
-    public SaveSystem.GameData GameData { get; private set; }
+
+    private bool _isPlaying;
 
     new void Awake()
     {
@@ -42,6 +44,7 @@ public class GameManager : Singleton<GameManager>
     private void OnAllCardsDestroyed()
     {
         StartCoroutine(GameOver());
+        _isPlaying = false;
     }
 
     private IEnumerator GameOver()
@@ -57,21 +60,34 @@ public class GameManager : Singleton<GameManager>
 
     public void Start()
     {
+        if(IsSavedGame) StartGame();
+        else
+        {
+            PanelsManager.Instance.ShowMainMenuPanel();
+        }
+    }
+
+    public void StartGame()
+    {
         GameStarted?.Invoke();
         _cardsPair = new List<Card>();
         _comparisonTargets = new Queue<List<Card>>();
         Canvas.ForceUpdateCanvases();
         ScoreSystem.Instance.Start();
         CardsGrid.Instance.Populate();
-        StartCoroutine(StartGame());
+        StartCoroutine(FlipCards());
+        _isPlaying = true;
     }
 
     private void Update()
     {
-        while (_comparisonTargets.Count>0)
+        if (_isPlaying)
         {
-            var comparisonTarget = _comparisonTargets.Dequeue();
-            StartCoroutine(nameof(CompareCards), comparisonTarget);
+            while (_comparisonTargets.Count>0)
+            {
+                var comparisonTarget = _comparisonTargets.Dequeue();
+                StartCoroutine(nameof(CompareCards), comparisonTarget);
+            }
         }
     }
 
@@ -92,7 +108,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private IEnumerator StartGame()
+    private IEnumerator FlipCards()
     {
         CardsGrid.Instance.FlipAllCards();
         yield return new WaitForSecondsRealtime(showingCardsTime);

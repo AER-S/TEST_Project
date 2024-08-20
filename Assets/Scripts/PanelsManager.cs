@@ -23,7 +23,7 @@ public class PanelsManager : Singleton<PanelsManager>
     {
         gamePanel.gameObject.SetActive(false);
         gameOverPanel.gameObject.SetActive(false);
-        //mainMenuPanel.gameObject.SetActive(false);
+        mainMenuPanel.gameObject.SetActive(false);
     }
 
     public void ShowMainMenuPanel()

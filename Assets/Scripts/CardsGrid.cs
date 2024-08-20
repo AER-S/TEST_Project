@@ -16,7 +16,9 @@ public class CardsGrid : Common.Singleton<CardsGrid>
 
     public static Action AllCardsDestroyed;
     public int Rows => rows;
+    public void SetRows(float value) => rows = (int)value;
     public int Columns => columns;
+    public void SetColumns(float value) => columns = (int)value;
 
     private ObjectPool<Card> _cardsPool;
 
@@ -140,7 +142,7 @@ public class CardsGrid : Common.Singleton<CardsGrid>
     private List<Card> GenerateCards()
     {
         List<Card> cards = new List<Card>();
-        var slotsCount = _cardSlots.Length;
+        var slotsCount = rows*columns;
         var cardsSprites = GenerateSprites(slotsCount);
         for (int i = 0; i < slotsCount; i++)
         {

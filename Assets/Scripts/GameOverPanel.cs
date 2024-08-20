@@ -10,7 +10,7 @@ public class GameOverPanel : MonoBehaviour
 
     public void GoToMainMenu()
     {
-        
+        PanelsManager.Instance.ShowMainMenuPanel();
     }
 
     public void Quit()
