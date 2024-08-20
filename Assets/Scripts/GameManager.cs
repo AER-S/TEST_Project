@@ -13,6 +13,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private float showingCardsTime = 3;
 
     public static Action<bool> DoneComparing;
+    public static Action GameEnded;
 
     public bool IsSavedGame { get; private set; }
     private List<Card> _cardsPair;
@@ -42,7 +43,14 @@ public class GameManager : Singleton<GameManager>
 
     private void OnAllCardsDestroyed()
     {
+        StartCoroutine(GameOver());
+    }
+
+    private IEnumerator GameOver()
+    {
+        yield return new WaitForSecondsRealtime(2);
         PanelsManager.Instance.ShowGameOverPanel();
+        GameEnded?.Invoke();
     }
     
     public void NewGame()

@@ -11,6 +11,8 @@ public class Card : MonoBehaviour
         public int Index;
         public int Value;
     }
+
+    public static Action CardFlipped;
     
     [SerializeField] private Image frontImage;
     [SerializeField] private Animation animation;
@@ -41,12 +43,14 @@ public class Card : MonoBehaviour
     {
         animation.Play("Flip");
         isFlipped = true;
+        CardFlipped?.Invoke();
     }
 
     public void UnFlip()
     {
         animation.Play("FlipBack");
         isFlipped = false;
+        CardFlipped?.Invoke();
     }
 
     public void DestroyCard()

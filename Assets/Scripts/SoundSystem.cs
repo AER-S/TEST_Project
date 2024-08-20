@@ -9,23 +9,50 @@ public class SoundSystem : Singleton<SoundSystem>
     [SerializeField] private AudioClip mismatchingSound;
     [SerializeField] private AudioClip gameOverSound;
 
-    public void PlayFlippingSound()
+    private void OnEnable()
     {
-        audioSource.PlayOneShot(flippingSound);
+        Card.CardFlipped += PlayFlippingSound;
+        GameManager.DoneComparing += OnDoneComparing;
+        GameManager.GameEnded += PlayGameOverSound;
+    }
+
+    private void OnDisable()
+    {
+        Card.CardFlipped -= PlayFlippingSound;
+        GameManager.DoneComparing -= OnDoneComparing;
+        GameManager.GameEnded -= PlayGameOverSound;
     }
     
-    public void PlayMatchingSound()
+    private void OnDoneComparing(bool value)
     {
+        if(value) PlayMatchingSound();
+        else PlayMismatchingSound();
+    }
+
+    private void PlayFlippingSound()
+    {
+        if (!audioSource.isPlaying || (audioSource.isPlaying&& audioSource.clip != flippingSound))
+        {
+            audioSource.clip = flippingSound;
+            audioSource.Play();
+        }
+    }
+    
+    private void PlayMatchingSound()
+    {
+        audioSource.clip = null;
         audioSource.PlayOneShot(matchingSound);
     }
     
-    public void PlayMismatchingSound()
+    private void PlayMismatchingSound()
     {
+        audioSource.clip = null;
         audioSource.PlayOneShot(mismatchingSound);
     }
     
-    public void PlayGameOverSound()
+    private void PlayGameOverSound()
     {
+        audioSource.clip = null;
         audioSource.PlayOneShot(gameOverSound);
     }
 }
