@@ -13,6 +13,9 @@ public class SaveSystem : Singleton<SaveSystem>
         public int Rows;
         public int Columns;
         public List<Card.CardData> LastGameCards;
+        public int Score;
+        public int Moves;
+        public int Combo;
     }
 
     private string _savePath;

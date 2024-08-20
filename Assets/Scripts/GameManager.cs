@@ -120,11 +120,19 @@ public class GameManager : Singleton<GameManager>
 
     private void OnDestroy()
     {
+        CollectData();
+        SaveSystem.Instance.SaveGame(GameData);
+    }
+
+    private void CollectData()
+    {
         if (GameData == null) GameData = new SaveSystem.GameData();
         GameData.Rows = CardsGrid.Instance.Rows;
         GameData.Columns = CardsGrid.Instance.Columns;
+        GameData.Score = ScoreSystem.Instance.Score;
+        GameData.Moves = ScoreSystem.Instance.Moves;
+        GameData.Combo = ScoreSystem.Instance.Combo;
         GameData.LastGameCards = CardsGrid.Instance.Cards().Count > 0 ? CardsGrid.Instance.Cards() : new List<Card.CardData>();
-        SaveSystem.Instance.SaveGame(GameData);
     }
 
     

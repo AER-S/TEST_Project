@@ -37,9 +37,19 @@ public class ScoreSystem : Singleton<ScoreSystem>
 
     public void Start()
     {
-        Score = 0;
-        Moves = 0;
-        Combo = 0;
+        if (GameManager.Instance.IsSavedGame)
+        {
+            Score = GameManager.Instance.GameData.Score;
+            Moves = GameManager.Instance.GameData.Moves;
+            Combo = GameManager.Instance.GameData.Combo;
+        }
+        else
+        {
+            Score = 0;
+            Moves = 0;
+            Combo = 0; 
+        }
+        
         ScoreUpdated?.Invoke();
     }
     
